@@ -31,7 +31,9 @@ export default class UserRepository{
             return newUser;
         }
         catch(err){
+            console.log(err);
             throw new Error("Something went wrong with database");
+            
         }
     }
 

@@ -11,11 +11,10 @@ const jwtAuth= (req,res,next)=>{
    const payload=jwt.verify(token,
     'AIb6d35fvJM4O9pXqXQNla2jBCH9kuLz');
     req.body.userID=payload.userID;
-     
     }
    catch(error){
      console.log(error);
-    return res.status(400).send('Non autorize user');
+    return res.status(400).send('Nonautorizeuser');
    }
    //next middleware
    next();

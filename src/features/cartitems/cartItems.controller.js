@@ -10,7 +10,7 @@ export class CartItemsController {
         try{
         const { productID, quantity } = req.body;
         const userID = req.body.userID;
-          await this.cartItemsRepository.add( userID,productID,quantity);
+          await this.cartItemsRepository.add( userID,productID,parseFloat(quantity));
            return  res.status(201).send("Cart is updated");
         }
         catch(err){

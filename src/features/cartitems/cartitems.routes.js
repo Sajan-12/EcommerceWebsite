@@ -1,6 +1,6 @@
 //manage paths/routes
 import express from "express";
-import { CartItemsController } from "./cartitems.controller.js"
+import { CartItemsController } from "./cartitems.controller.js";
 
 const  cartRouter= express.Router();
 const cartItemsController=new CartItemsController();
