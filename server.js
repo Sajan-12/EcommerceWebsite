@@ -1,7 +1,6 @@
 import "./env.js";
 // 1. Import express
 import express from 'express';
-//import swagger from 'swagger-ui-express';
 
 import productRouter from './src/features/product/product.routes.js';
 import bodyParser from 'body-parser';
@@ -21,14 +20,14 @@ const server = express();
 server.use(bodyParser.json());
 server.use(express.urlencoded({extended:true}));
 
-//server.use('/api-docs', swagger.serve, swagger.setup(apiDocs));
+
 // for all requests related to product, redirect to product routes.
 // localhost:3200/api/products
 server.use('/api/products',jwtAuth,productRouter);
 server.use('/api/users',userRouter);
 server.use('/api/carts',jwtAuth,cartRouter);
 server.use('/api/orders',jwtAuth,orderRouter );
-server.use('/api/likes', likeRouter);
+server.use('/api/likes',jwtAuth, likeRouter);
 // 3. Default request handler
 server.get('/', (req, res)=>{
     res.send("Welcome to Ecommerce APIs");
@@ -45,4 +44,5 @@ server.use((req,res)=>{
 server.listen(3200,()=>{
     console.log("Server is running at 3200");
     connectUsingMongoose();
+    connectToMongodb();
 });

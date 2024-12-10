@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export const likeSchema=new mongoose.Schema(
+ const likeSchema=new mongoose.Schema(
     {
         user:{
             type:mongoose.Schema.Types.ObjectId,
@@ -22,3 +22,6 @@ export const likeSchema=new mongoose.Schema(
 }).post('save',(doc)=>{
     console.log(doc);
 })
+
+const likeModel=new mongoose.model("Like",likeSchema);
+export default likeModel;

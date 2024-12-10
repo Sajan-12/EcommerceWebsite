@@ -1,25 +1,28 @@
-import UserModel from './user.model.js';
+import userModel from './user.model.js';
 import jwt from 'jsonwebtoken';
-import UserRepository from './user.repository.js';
-//import bcrypt from 'bcrypt';
+
+import bcrypt from 'bcrypt';
 
 export default class UserController {
 
-  constructor(){
-    this.userRepository = new UserRepository();
-  }
-
   async resetPassword(req, res, next){
-    const {newPassword} = req.body;
-   // const hashedPassword = await bcrypt.hash(newPassword, 12);
-    const userID = req.body.userID;
+    const {newPassword} =req.body;
+    const hashedPassword = await bcrypt.hash(newPassword,12);
+    const userID=req.body.userID;
     try{
-      await this.userRepository.resetPassword(userID, newPassword)
-      res.status(200).send("Password is updated");
-    }catch(err){
+      let user = await userModel.findById(userID);
+      if(user){
+          user.password=hashedPassword;
+          await user.save();
+          return res.status(200).send("password is updated");
+      }else{
+         throw new Error("No such user found");
+      }
+      
+  } catch(err){
       console.log(err);
-     
-    }
+      throw new Error("Something went wrong with database");
+  }
   }
 
   async signUp(req,res,next) {
@@ -30,15 +33,16 @@ export default class UserController {
       type,
     } = req.body;
    
-    //const hashedPassword = await bcrypt.hash(password, 12);
-    const user = new UserModel(
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const user =await userModel({
       name,
       email,
-      password,
+      password:hashedPassword,
       type
+    }
     );
-    await this.userRepository.signUp(user);
-    res.status(201).send(user);
+    const savedUser=await user.save();
+    res.status(201).send(savedUser);
   }
 
   async signIn(req, res, next) {
@@ -46,7 +50,7 @@ export default class UserController {
       // 1. Find user by email.
       const{email,password}=req.body;
       console.log(req.body);
-    const user = await this.userRepository.findByEmail(email);
+    const user = await  userModel.findOne({email});
     console.log(user);
     if(!user){
       return res
@@ -54,8 +58,8 @@ export default class UserController {
         .send('Incorrect Credentials');
     }else{
    // 2. Compare password with hashed password.
-   // const result = await bcrypt.compare(req.body.password, user.password);
-  if(password==user.password){
+    const result = await bcrypt.compare(password, user.password);
+  if(result){
  // 3. Create token.
  const token = jwt.sign(
   {
@@ -64,7 +68,7 @@ export default class UserController {
   },
   'AIb6d35fvJM4O9pXqXQNla2jBCH9kuLz',
   {
-    expiresIn: '1h',
+    expiresIn: '3h',
   }
 );
 // 4. Send token.
@@ -79,6 +83,7 @@ else {
     }
     catch(err){
       console.log(err);
+      console.log("error in user contoller");
       return res.status(200).send(err);
     }
   }

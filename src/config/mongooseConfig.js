@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { categorySchema } from "../features/product/category.schema.js";
+import categoryModel from "../features/product/category.model.js";
 dotenv.config();
 
 const url = process.env.DB_URL;
@@ -20,8 +20,8 @@ export const connectUsingMongoose=async()=>{
 }
 
 async function addCategories(){
-    const categoryModel=mongoose.model('Category',categorySchema);
-    const categories=categoryModel.find();
+    
+    const categories=await categoryModel.find();
     if(!categories || (await categories).length==0){
           categoryModel.insertMany([
          

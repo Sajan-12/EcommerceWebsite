@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const categorySchema=new mongoose.Schema(
+const categorySchema=new mongoose.Schema(
     {
         name:String,
         products:[
@@ -11,3 +11,5 @@ export const categorySchema=new mongoose.Schema(
         ]
     }
 );
+const categoryModel=new mongoose.model("Category",categorySchema);
+export default categoryModel;

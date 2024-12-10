@@ -3,8 +3,8 @@ import { MongoClient } from "mongodb";
 //const url="mongodb://localhost:27017";
 const url =process.env.DB_URL;
 let client;
-const connectToMongodb=()=>{
-    MongoClient.connect(url)
+const connectToMongodb=async()=>{
+    await MongoClient.connect(url)
     .then((clientInstance)=>{
         client=clientInstance;
         createIndexes(client.db());

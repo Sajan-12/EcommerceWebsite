@@ -1,33 +1,19 @@
+import mongoose from "mongoose";
 
- export default class UserModel{
-    constructor(name,email,password,type,id){
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.type = type;
-        this._id = id;
-    }
-  
-  static getAll(){
-    return users;
-  }
-};
-
-var users = [
-  {
-    id: 1,
-    name: 'Seller User',
-    email: 'seller@ecom.com',
-    password: 'Password1',
-    type: 'seller',
-  },
-  {
-    id: 2,
-    name: 'Customer User',
-    email: 'customer@ecom.com',
-    password: 'Password1',
-    type: 'customer',
-  },
-];
-
-  
+ const userSchema = new mongoose.Schema({
+    name: { type: String, maxLength:[25, "Name can't be greater than 25 characters"]},
+    email: {type: String, unique: true, required: true,
+        match: [/.+\@.+\../, "Please enter a valid email"]
+    },
+    password: {type: String, 
+        /*validate:{
+            validator: function(value){
+                return /^(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/.test(value)
+            },
+            message:"Password should be between 8-12 charachetrs and have a special character"
+        }*/
+    },
+    type:{ type: String, enum: ['Customer', 'Seller']}
+})
+const userModel =new mongoose.model('User', userSchema);
+export default userModel;

@@ -1,9 +1,16 @@
-
-export default class OrderModel{
-    constructor(userID,totalAmount,timestamp){
-        this.userID=userID;
-        this.totalAmount=totalAmount;
-        this.timestamp=timestamp;
-    
+import mongoose from "mongoose";
+const orderSchema=new mongoose.Schema({
+    userID:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"user"
+    },
+    totalAmount:{
+        type:Number 
+    },
+    timestamp:{
+         type:Date,
     }
-}
+});
+const orderModel=mongoose.model("Order",orderSchema);
+export default orderModel;
+
